@@ -26,8 +26,8 @@ class ToDoListViewController : UITableViewController {
         let saveAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.default, handler: { alert -> Void in
             if let newTask = alertController.textFields?[0].text {
                 if newTask != "" {
-            self.itemList.append(newTask)
-            self.tableView.reloadData()
+                    self.itemList.append(newTask)
+                    self.tableView.reloadData()
                 }
             }
             else {
