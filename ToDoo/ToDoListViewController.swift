@@ -45,7 +45,8 @@ class ToDoListViewController : UITableViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    //MARK : tableview methods
+    //MARK - tableview methods
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemList.count
     }
@@ -58,6 +59,17 @@ class ToDoListViewController : UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoListCell") 
         cell?.textLabel?.text = itemList[indexPath.row]
         return cell!
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            itemList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } 
     }
     
 }
