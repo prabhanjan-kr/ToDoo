@@ -11,14 +11,14 @@ import UIKit
 
 class ToDoListViewController : UITableViewController {
     
-    let defaults = UserDefaults.standard
-    var itemList = ["Conquer the world","Meet Osho", "Retire in amalfi"]
+    // let defaults = UserDefaults.standard
+    var itemList = [Task]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = defaults.array(forKey: "ToDoList") as? [String] {
-            itemList = items
-        }
+        //        if let items = defaults.array(forKey: "ToDoList") as? [Task] {
+        //            itemList = items
+        //        }
         tableView.separatorStyle = .none
         configureTableViewForAutodimension()
         
@@ -35,15 +35,17 @@ class ToDoListViewController : UITableViewController {
         
         let saveAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.default, handler: { alert -> Void in
             
-            if let newTask = alertController.textFields?[0].text {
-                if newTask != "" {
-                    
-                    self.itemList.append(newTask)
-                    //write it into Userdefaults
-                    self.defaults.set(self.itemList, forKey: "ToDoList")
-                    self.tableView.reloadData()
-                }
+            if alertController.textFields?[0].text != nil || alertController.textFields?[0].text != "" {
+                
+                let title = alertController.textFields?[0].text
+                let newTask = Task()
+                newTask.taskTitle = title!
+                self.itemList.append(newTask)
+                //write it into Userdefaults
+                //self.defaults.set(self.itemList, forKey: "ToDoList")
+                self.tableView.reloadData()
             }
+                
             else {
                 
                 self.dismiss(animated: false, completion: nil)
@@ -65,14 +67,9 @@ class ToDoListViewController : UITableViewController {
     //MARK - tableview methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if itemList.count == 0 {
-            noTasksLabel.isHidden = false
-        }
-        else {
-            noTasksLabel.isHidden = true
-        }
         
-            return itemList.count
+        noTasksLabel.isHidden = itemList.count == 0 ? false : true
+        return itemList.count
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -82,13 +79,14 @@ class ToDoListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoListCell")
-        cell?.textLabel?.text = itemList[indexPath.row]
+        let currentItem = itemList[indexPath.row]
+        cell?.textLabel?.text = currentItem.taskTitle
         cell?.textLabel?.textAlignment = .justified
         cell?.textLabel?.font = UIFont.systemFont(ofSize: 18)
-        cell?.imageView?.image = #imageLiteral(resourceName: "pending")
-        let bgView = UIView()
-        bgView.backgroundColor = UIColor.clear
-        cell?.selectedBackgroundView = bgView
+        
+        //task status
+        cell?.accessoryType = currentItem.isTaskCompleted ? .checkmark : .none
+        
         return cell!
     }
     
@@ -102,19 +100,29 @@ class ToDoListViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("\(indexPath.row) :is the row selected")
-        tableView.cellForRow(at: indexPath)?.imageView?.image = #imageLiteral(resourceName: "done")
-        tableView.cellForRow(at: indexPath)?.contentView.backgroundColor = UIColor.clear
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+            itemList[indexPath.row].isTaskCompleted = false
+        }
+        else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            itemList[indexPath.row].isTaskCompleted = true
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             itemList.remove(at: indexPath.row)
-            self.defaults.set(self.itemList, forKey: "ToDoList")
+            //self.defaults.set(self.itemList, forKey: "ToDoList")
             tableView.deleteRows(at: [indexPath], with: .fade)
         } 
     }
-   
+    
     func configureTableViewForAutodimension() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
