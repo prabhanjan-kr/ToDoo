@@ -8,52 +8,60 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class ToDoListViewController : UITableViewController {
     
-    // let defaults = UserDefaults.standard
-    var itemList = [Task]()
+    let taskContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var itemList : [Task] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        //        if let items = defaults.array(forKey: "ToDoList") as? [Task] {
-        //            itemList = items
-        //        }
-        tableView.separatorStyle = .none
-        configureTableViewForAutodimension()
-        
-    }
     @IBOutlet weak var noTasksLabel: UILabel!
     
-    @IBAction func addItemButtonAction(_ sender: UIBarButtonItem) {
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        loadTasks()
+        configureTableViewForAutodimension()
+        
+        
+        
+    }
+    
+    //MARK: - add Item Action and UIAlertcontroller
+    @IBAction func addItemButtonAction(_ sender: UIBarButtonItem)
+    {
         
         let alertController = UIAlertController(title: "Add New Task", message: "", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addTextField { (textField : UITextField!) -> Void in
-            textField.placeholder = "Enter here"
-            textField.autocorrectionType = .yes
+        alertController.addTextField
+            {
+                (textField : UITextField!) -> Void in
+                textField.placeholder = "Enter here"
+                textField.autocorrectionType = .yes
+                textField.autocapitalizationType = UITextAutocapitalizationType.sentences
         }
         
         let saveAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.default, handler: { alert -> Void in
-            
-            if alertController.textFields?[0].text != nil || alertController.textFields?[0].text != "" {
-                
+            if (alertController.textFields?[0].text != nil || alertController.textFields?[0].text != "")
+            {
                 let title = alertController.textFields?[0].text
-                let newTask = Task()
+                let newTask = Task(context: self.taskContext)
                 newTask.taskTitle = title!
+                newTask.isTaskCompleted = false
                 self.itemList.append(newTask)
-                //write it into Userdefaults
-                //self.defaults.set(self.itemList, forKey: "ToDoList")
-                self.tableView.reloadData()
-            }
+                self.saveTaskContext()
                 
-            else {
+                
+            }
+            else
+            {
                 
                 self.dismiss(animated: false, completion: nil)
             }
         })
         
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: {
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler:
+        {
             (action : UIAlertAction!) -> Void in
             self.dismiss(animated: false, completion: nil)
         })
@@ -64,19 +72,49 @@ class ToDoListViewController : UITableViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    //MARK - tableview methods
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    //MARK: - Context save method
+    func saveTaskContext()
+    {
+        do {
+            try self.taskContext.save()
+        }
+        catch {
+            print(error)
+        }
+        
+        self.tableView.reloadData()
+    }
+    //MARK: - Context load method for reading from CoreData
+    func loadTasks()
+    {
+        let readRequest : NSFetchRequest<Task> = Task.fetchRequest()
+        do
+        {
+          itemList =  try taskContext.fetch(readRequest)
+        }
+        catch
+        {
+            print("error fetching from DB")
+        }
+    }
+    
+    //MARK: -  tableview methods
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         
         noTasksLabel.isHidden = itemList.count == 0 ? false : true
         return itemList.count
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int
+    {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "toDoListCell")
         let currentItem = itemList[indexPath.row]
@@ -90,42 +128,44 @@ class ToDoListViewController : UITableViewController {
         return cell!
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
         return 60
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("\(indexPath.row) :is the row selected")
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            itemList[indexPath.row].isTaskCompleted = false
-        }
-        else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            itemList[indexPath.row].isTaskCompleted = true
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        //negate the completion status of the selected task
+        itemList[indexPath.row].isTaskCompleted = !(itemList[indexPath.row].isTaskCompleted)
         
         tableView.deselectRow(at: indexPath, animated: true)
+        saveTaskContext()
         
     }
     
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
+    {
+        if editingStyle == .delete
+        {
+            self.taskContext.delete(itemList[indexPath.row])
             itemList.remove(at: indexPath.row)
-            //self.defaults.set(self.itemList, forKey: "ToDoList")
             tableView.deleteRows(at: [indexPath], with: .fade)
+            saveTaskContext()
+            
         } 
     }
     
-    func configureTableViewForAutodimension() {
+    func configureTableViewForAutodimension()
+    {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
+        tableView.separatorStyle = .none
         tableView.reloadData()
     }
     
