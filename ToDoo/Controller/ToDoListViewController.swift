@@ -102,7 +102,7 @@ class ToDoListViewController : UITableViewController {
         let readRequest : NSFetchRequest<Task> = Task.fetchRequest()
         do
         {
-          itemList =  try taskContext.fetch(readRequest)
+            itemList =  try taskContext.fetch(readRequest)
         }
         catch
         {
@@ -184,28 +184,34 @@ class ToDoListViewController : UITableViewController {
 
 extension ToDoListViewController : UISearchBarDelegate
 {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
-    {
-        let searchRequest : NSFetchRequest<Task> = Task.fetchRequest()
-        let searchPredicate = NSPredicate(format: "taskTitle CONTAINS[cd] %@", searchBar.text!)
-        searchRequest.predicate = searchPredicate
-        do
-        {
-          itemList =  try taskContext.fetch(searchRequest)
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadTasks()
+            searchBar.resignFirstResponder()
         }
-        catch
+        else
         {
-            print("Search error")
+            let searchRequest : NSFetchRequest<Task> = Task.fetchRequest()
+            let searchPredicate = NSPredicate(format: "taskTitle CONTAINS[cd] %@", searchBar.text!)
+            searchRequest.predicate = searchPredicate
+            do
+            {
+                itemList =  try taskContext.fetch(searchRequest)
+            }
+            catch
+            {
+                print("Search error")
+            }
+            
         }
         tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    {
+        
         searchBar.endEditing(true)
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.loadTasks()
-        self.tableView.reloadData()
-        searchBar.text = ""
-        searchBar.endEditing(true)
-    }
     
 }
