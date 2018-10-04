@@ -12,10 +12,14 @@ import CoreData
 
 class ToDoListViewController : UITableViewController {
     
+    
+    
+    @IBOutlet weak var noTasksLabel: UILabel!
+    @IBOutlet weak var searchBarOutlet: UISearchBar!
     let taskContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var itemList : [Task] = []
     
-    @IBOutlet weak var noTasksLabel: UILabel!
+    
     
     override func viewDidLoad()
     {
@@ -23,8 +27,15 @@ class ToDoListViewController : UITableViewController {
         loadTasks()
         configureTableViewForAutodimension()
         
+        //tap outside to end search editing
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        tableView.addGestureRecognizer(tapGesture)
         
-        
+    }
+    
+    @objc func endEditing()
+    {
+        searchBarOutlet.endEditing(true)
     }
     
     //MARK: - add Item Action and UIAlertcontroller
@@ -169,4 +180,15 @@ class ToDoListViewController : UITableViewController {
         tableView.reloadData()
     }
     
+}
+
+extension ToDoListViewController : UISearchBarDelegate
+{
+    
+    
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBar.endEditing(true)
+    }
 }
