@@ -184,11 +184,28 @@ class ToDoListViewController : UITableViewController {
 
 extension ToDoListViewController : UISearchBarDelegate
 {
-    
-    
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    {
+        let searchRequest : NSFetchRequest<Task> = Task.fetchRequest()
+        let searchPredicate = NSPredicate(format: "taskTitle CONTAINS[cd] %@", searchBar.text!)
+        searchRequest.predicate = searchPredicate
+        do
+        {
+          itemList =  try taskContext.fetch(searchRequest)
+        }
+        catch
+        {
+            print("Search error")
+        }
+        tableView.reloadData()
         searchBar.endEditing(true)
     }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.loadTasks()
+        self.tableView.reloadData()
+        searchBar.text = ""
+        searchBar.endEditing(true)
+    }
+    
 }
