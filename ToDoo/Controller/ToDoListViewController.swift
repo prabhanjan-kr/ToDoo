@@ -116,6 +116,8 @@ class ToDoListViewController : UITableViewController {
     {
         
         noTasksLabel.isHidden = itemList.count == 0 ? false : true
+        searchBarOutlet.isUserInteractionEnabled = itemList.count == 0 ? false : true
+        searchBarOutlet.alpha = itemList.count == 0 ? 0.5 : 1
         return itemList.count
     }
     
@@ -185,7 +187,8 @@ class ToDoListViewController : UITableViewController {
 extension ToDoListViewController : UISearchBarDelegate
 {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count == 0 {
+        if searchBar.text?.count == 0
+        {
             loadTasks()
             searchBar.resignFirstResponder()
         }
