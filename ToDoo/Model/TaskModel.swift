@@ -7,9 +7,10 @@
 //
 
 import Foundation
-class Task {
+import RealmSwift
+class Task : Object {
     
-    var taskTitle : String = ""
-    var isTaskCompleted : Bool = false
+   @objc dynamic var taskTitle : String = ""
+   @objc  dynamic var isTaskCompleted : Bool = false
     
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		011A889342669C329AA44998 /* Pods_ToDoo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37A64F4050955CD20AC6009 /* Pods_ToDoo.framework */; };
 		77B66777215A250500026C32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B66776215A250500026C32 /* AppDelegate.swift */; };
 		77B6677C215A250500026C32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77B6677A215A250500026C32 /* Main.storyboard */; };
 		77B6677E215A250800026C32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77B6677D215A250800026C32 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		76AEB0B535A83ECC58D9A128 /* Pods-ToDoo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoo.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoo/Pods-ToDoo.release.xcconfig"; sourceTree = "<group>"; };
 		77B66773215A250500026C32 /* ToDoo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77B66776215A250500026C32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77B6677B215A250500026C32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -24,6 +26,8 @@
 		77B66782215A250800026C32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77B66788215A260200026C32 /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
 		77EEB5A4216212AC00DBF23A /* TaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
+		8CB3A935DF42C8B47E67DE92 /* Pods-ToDoo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoo/Pods-ToDoo.debug.xcconfig"; sourceTree = "<group>"; };
+		D37A64F4050955CD20AC6009 /* Pods_ToDoo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				011A889342669C329AA44998 /* Pods_ToDoo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5DA6B3ADDD0A3F02B746C50E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D37A64F4050955CD20AC6009 /* Pods_ToDoo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		77B6676A215A250500026C32 = {
 			isa = PBXGroup;
 			children = (
 				77B66775215A250500026C32 /* ToDoo */,
 				77B66774215A250500026C32 /* Products */,
+				AE8F18E386F75900CF1D29D6 /* Pods */,
+				5DA6B3ADDD0A3F02B746C50E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +114,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		AE8F18E386F75900CF1D29D6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8CB3A935DF42C8B47E67DE92 /* Pods-ToDoo.debug.xcconfig */,
+				76AEB0B535A83ECC58D9A128 /* Pods-ToDoo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -106,9 +130,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77B66785215A250800026C32 /* Build configuration list for PBXNativeTarget "ToDoo" */;
 			buildPhases = (
+				8B1A9FB305C992343CFA9CA0 /* [CP] Check Pods Manifest.lock */,
 				77B6676F215A250500026C32 /* Sources */,
 				77B66770215A250500026C32 /* Frameworks */,
 				77B66771215A250500026C32 /* Resources */,
+				C11BF6510D58F7C61FFB4DD0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -164,6 +190,55 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8B1A9FB305C992343CFA9CA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ToDoo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C11BF6510D58F7C61FFB4DD0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ToDoo/Pods-ToDoo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ToDoo/Pods-ToDoo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		77B6676F215A250500026C32 /* Sources */ = {
@@ -314,6 +389,7 @@
 		};
 		77B66786215A250800026C32 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8CB3A935DF42C8B47E67DE92 /* Pods-ToDoo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -332,6 +408,7 @@
 		};
 		77B66787215A250800026C32 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76AEB0B535A83ECC58D9A128 /* Pods-ToDoo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
