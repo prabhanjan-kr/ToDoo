@@ -8,19 +8,17 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
 class ToDoListViewController : UITableViewController {
     
     // let defaults = UserDefaults.standard
-    var itemList = [Task]()
+    var itemList : Results<Task>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        if let items = defaults.array(forKey: "ToDoList") as? [Task] {
-        //            itemList = items
-        //        }
-        tableView.separatorStyle = .none
-        configureTableViewForAutodimension()
+        fetchListFromRealm()
+                configureTableViewForAutodimension()
         
     }
     @IBOutlet weak var noTasksLabel: UILabel!
@@ -40,9 +38,7 @@ class ToDoListViewController : UITableViewController {
                 let title = alertController.textFields?[0].text
                 let newTask = Task()
                 newTask.taskTitle = title!
-                self.itemList.append(newTask)
-                //write it into Userdefaults
-                //self.defaults.set(self.itemList, forKey: "ToDoList")
+                self.saveToRealm()
                 self.tableView.reloadData()
             }
                 
@@ -64,12 +60,12 @@ class ToDoListViewController : UITableViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    //MARK - tableview methods
+    //MARK: - tableview methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         noTasksLabel.isHidden = itemList.count == 0 ? false : true
-        return itemList.count
+        return itemList.count.
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -110,6 +106,7 @@ class ToDoListViewController : UITableViewController {
             itemList[indexPath.row].isTaskCompleted = true
         }
         
+        self.saveToRealm()
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -117,16 +114,40 @@ class ToDoListViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            itemList.remove(at: indexPath.row)
-            //self.defaults.set(self.itemList, forKey: "ToDoList")
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
         } 
     }
     
     func configureTableViewForAutodimension() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
+        tableView.separatorStyle = .none
+
         tableView.reloadData()
     }
     
+    //MARK: - Realm methods
+    func fetchListFromRealm() {
+        DispatchQueue(label: "background").async {
+            autoreleasepool {
+                let realm = try! Realm()
+                self.itemList = realm.objects(Task.self)
+                
+            }
+    }
+    }
+    func saveToRealm() {
+        do {
+            let realm = try Realm()
+            try realm.write {
+                realm.add(itemList)
+            }
+        }
+        catch {
+            print(error)
+        }
+    }
+    
 }
+
